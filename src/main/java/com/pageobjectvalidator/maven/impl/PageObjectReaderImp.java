@@ -7,6 +7,7 @@ import com.pageobjectvalidator.maven.model.PageObjectInterface;
 import com.pageobjectvalidator.maven.utils.FileUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -45,8 +46,6 @@ public class PageObjectReaderImp implements PageObjectReader {
      */
     @Override
     public List<PageObjectClass> getClasses() {
-        List<StringBuilder> foo = FileUtil.getJavaContents(classesAbsolutePath);
-
         return null;
     }
 
@@ -57,6 +56,21 @@ public class PageObjectReaderImp implements PageObjectReader {
      */
     @Override
     public List<PageObjectInterface> getInterfaces() {
-        return null;
+        List<PageObjectInterface> interfaceList = new ArrayList<>();
+        List<StringBuilder> candidateInterfaceContents = FileUtil.getJavaContents(interfaceAbsolutePath);
+        for (StringBuilder candidateContent :
+                candidateInterfaceContents) {
+            String candidateContentAsString = candidateContent.toString();
+            String interfaceKeyword = "interface ";
+            int indexOfInterfaceKeyword = candidateContentAsString.indexOf(interfaceKeyword);
+            int indexOfInterfaceOpenCurlyBrace = candidateContentAsString.indexOf('{');
+            if (indexOfInterfaceKeyword < 0 || indexOfInterfaceOpenCurlyBrace < 0){
+                return interfaceList;
+            }
+            String interfaceName = candidateContentAsString.substring(indexOfInterfaceKeyword+interfaceKeyword.length(), indexOfInterfaceOpenCurlyBrace);
+            interfaceName = interfaceName.replace(" ","");
+            interfaceList.add(new PageObjectInterface(interfaceName));
+        }
+        return interfaceList;
     }
 }

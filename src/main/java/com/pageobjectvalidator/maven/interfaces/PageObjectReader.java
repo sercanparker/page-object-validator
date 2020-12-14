@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author sercansensulun on 12.12.2020.
  */
-public interface PageObjectReader {
+public interface PageObjectReader{
 
     List<PageObjectClass> getClasses() throws MojoExecutionException;
 

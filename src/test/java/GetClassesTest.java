@@ -1,6 +1,9 @@
 import com.pageobjectvalidator.maven.impl.PageObjectReaderImp;
 import com.pageobjectvalidator.maven.model.PageObjectClass;
 import com.pageobjectvalidator.maven.utils.FileUtil;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 
@@ -16,11 +19,21 @@ public class GetClassesTest {
 
     private final String testClassesAbsolutePath = "src/test/data";
     private final String testInterfaceAbsolutePath = "src/test/data";
+    private MockedStatic<FileUtil> fileUtilMock;
+
+    @Before
+    public void before(){
+        fileUtilMock = mockStatic(FileUtil.class);
+    }
+
+    @After
+    public void after(){
+        fileUtilMock.close();
+    }
 
     @Test
     public void when_there_is_nothing_then_return_empty_list(){
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath,testInterfaceAbsolutePath);
-        MockedStatic<FileUtil> fileUtilMock = mockStatic(FileUtil.class);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>());
         List<PageObjectClass> classesList =  pageObjectReaderImp.getClasses();
         assert classesList.size() == 0;
@@ -29,7 +42,6 @@ public class GetClassesTest {
     @Test
     public void when_there_is_no_any_class_java_then_return_empty_list(){
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
-        MockedStatic<FileUtil> fileUtilMock = mockStatic(FileUtil.class);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder("text"));}
         });
@@ -41,7 +53,6 @@ public class GetClassesTest {
     @Test
     public void when_there_is_class_without_parent_and_interface_then_return_only_one_with_only_name(){
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
-        MockedStatic<FileUtil> fileUtilMock = mockStatic(FileUtil.class);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo " +
@@ -57,7 +68,6 @@ public class GetClassesTest {
     @Test
     public void when_there_is_class_with_parent_and_without_interface_then_return_only_one_with_name_and_parent(){
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
-        MockedStatic<FileUtil> fileUtilMock = mockStatic(FileUtil.class);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo extends Bar" +
@@ -74,7 +84,6 @@ public class GetClassesTest {
     @Test
     public void when_there_is_class_with_parent_and_interface_then_return_only_one_with_name_and_parent_and_interface(){
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
-        MockedStatic<FileUtil> fileUtilMock = mockStatic(FileUtil.class);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo extends Bar implements Zoo" +
