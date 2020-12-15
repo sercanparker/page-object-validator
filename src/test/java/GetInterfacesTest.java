@@ -37,7 +37,7 @@ public class GetInterfacesTest {
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath,testInterfaceAbsolutePath);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testInterfaceAbsolutePath)).thenReturn(new ArrayList<>());
         List<PageObjectInterface> interfaceList = pageObjectReaderImp.getInterfaces();
-        assert interfaceList.size() == 0;
+        assertThat(interfaceList.size(), is(0));
     }
 
     @Test
@@ -47,7 +47,7 @@ public class GetInterfacesTest {
             {add(new StringBuilder("text"));}
         });
         List<PageObjectInterface> interfaceList = pageObjectReaderImp.getInterfaces();
-        assert interfaceList.size() == 0;
+        assertThat(interfaceList.size(), is(0));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class GetInterfacesTest {
                     "}"));}
         });
         List<PageObjectInterface> interfaceList = pageObjectReaderImp.getInterfaces();
-        assert interfaceList.size() == 1;
+        assertThat(interfaceList.size(), is(1));
         assertThat(interfaceList.get(0).getName(),is("FooInterface"));
     }
 }

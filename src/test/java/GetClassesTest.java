@@ -3,13 +3,15 @@ import com.pageobjectvalidator.maven.model.PageObjectClass;
 import com.pageobjectvalidator.maven.utils.FileUtil;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.MockedStatic;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mockStatic;
 
 /**
@@ -36,7 +38,7 @@ public class GetClassesTest {
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath,testInterfaceAbsolutePath);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>());
         List<PageObjectClass> classesList =  pageObjectReaderImp.getClasses();
-        assert classesList.size() == 0;
+        assertThat(classesList.size(), is(0));
     }
 
     @Test
@@ -45,9 +47,8 @@ public class GetClassesTest {
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder("text"));}
         });
-
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
-        assert classList.size() == 0;
+        assertThat(classList.size(), is(0));
     }
 
     @Test
@@ -59,10 +60,11 @@ public class GetClassesTest {
                     "{" +
                     "}"));}
         });
-
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
-        assert classList.size() == 1;
-        assert classList.get(0).getName().equals("Foo");
+        assertThat(classList.size(), is(1));
+        assertThat(classList.get(0).getName(), is("Foo"));
+        assertNull(classList.get(0).getParentName());
+        assertNull(classList.get(0).getInterfaceName());
     }
 
     @Test
@@ -74,11 +76,11 @@ public class GetClassesTest {
                             "{" +
                             "}"));}
         });
-
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
-        assert classList.size() == 1;
-        assert classList.get(0).getName().equals("Foo");
-        assert classList.get(0).getParentName().equals("Bar");
+        assertThat(classList.size(), is(1));
+        assertThat(classList.get(0).getName(), is("Foo"));
+        assertThat(classList.get(0).getParentName(), is("Bar"));
+        assertNull(classList.get(0).getInterfaceName());
     }
 
     @Test
@@ -92,10 +94,10 @@ public class GetClassesTest {
         });
 
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
-        assert classList.size() == 1;
-        assert classList.get(0).getName().equals("Foo");
-        assert classList.get(0).getParentName().equals("Bar");
-        assert classList.get(0).getInterfaceName().equals("Zoo");
+        assertThat(classList.size(), is(1));
+        assertThat(classList.get(0).getName(), is("Foo"));
+        assertThat(classList.get(0).getParentName(), is("Bar"));
+        assertThat(classList.get(0).getInterfaceName(), is("Zoo"));
     }
 
 
