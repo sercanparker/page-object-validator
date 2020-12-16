@@ -80,19 +80,6 @@ public class ValidateClassesTest {
         pageObjectValidatorImp.validateClasses("[A-Z][a-z]+PageObject$", "PageObject");
     }
 
-    @Test
-    public void when_classes_has_different_interfaces_regex_then_throw_exception() throws MojoExecutionException {
-        when(pageObjectReader.getClasses()).thenReturn(new ArrayList<PageObjectClass>(){
-            {
-                add(new PageObjectClass("LoginPageObject", "PageObject","LoginPageObjectInterface"));
-                add(new PageObjectClass("MainPageObject", "PageObject", "IMainPage"));
-            }
-        });
-        PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
-        exceptionRule.expect(MojoExecutionException.class);
-        exceptionRule.expectMessage("Each page class should implements same regex interface.");
-        pageObjectValidatorImp.validateClasses("[A-Z][a-z]+PageObject$", "PageObject");
-    }
 
     @Test
     public void when_classes_has_same_base_class_and_same_interface_regex_then_no_exception() throws MojoExecutionException {
@@ -103,7 +90,6 @@ public class ValidateClassesTest {
             }
         });
         PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
-        exceptionRule.expect(Test.None.class);
         pageObjectValidatorImp.validateClasses("[A-Z][a-z]+PageObject$", "PageObject");
 
     }

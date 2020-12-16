@@ -47,7 +47,6 @@ public class ValidateInterfacesTest {
         });
         PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
         exceptionRule.expect(MojoExecutionException.class);
-        exceptionRule.expectMessage("There are interfaces with different regex.");
         pageObjectValidatorImp.validateInterfaces("[A-Z][a-z]+PageObjectInterface$");
     }
 
@@ -60,7 +59,6 @@ public class ValidateInterfacesTest {
             }
         });
         PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
-        exceptionRule.expect(Test.None.class);
         pageObjectValidatorImp.validateInterfaces("[A-Z][a-z]+PageObjectInterface$");
     }
 
