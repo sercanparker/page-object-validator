@@ -51,6 +51,16 @@ public class GetInterfacesTest {
     }
 
     @Test
+    public void given_anomaly_class_content_then_return_empty_list(){
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath,testInterfaceAbsolutePath);
+        fileUtilMock.when(() -> FileUtil.getJavaContents(testInterfaceAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
+            {add(new StringBuilder("public interface Foo [}"));}
+        });
+        List<PageObjectInterface> interfaceList = pageObjectReaderImp.getInterfaces();
+        assertThat(interfaceList.size(), is(0));
+    }
+
+    @Test
     public void when_there_is_an_interface_then_return_only_one_with_name(){
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath,testInterfaceAbsolutePath);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testInterfaceAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
@@ -61,4 +71,6 @@ public class GetInterfacesTest {
         assertThat(interfaceList.size(), is(1));
         assertThat(interfaceList.get(0).getName(),is("FooInterface"));
     }
+
+
 }

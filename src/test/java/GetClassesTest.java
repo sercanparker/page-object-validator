@@ -52,6 +52,19 @@ public class GetClassesTest {
     }
 
     @Test
+    public void given_interface_content_has_anomaly_then_return_empty_list(){
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+        fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
+            {add(new StringBuilder(
+                    "public class Foo " +
+                            "[" +
+                            "}"));}
+        });
+        List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
+        assertThat(classList.size(), is(0));
+    }
+
+    @Test
     public void when_there_is_class_without_parent_and_interface_then_return_only_one_with_only_name(){
         PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
@@ -65,6 +78,22 @@ public class GetClassesTest {
         assertThat(classList.get(0).getName(), is("Foo"));
         assertNull(classList.get(0).getParentName());
         assertNull(classList.get(0).getInterfaceName());
+    }
+
+    @Test
+    public void when_there_is_class_without_parent_then_return_only_one_with_interface(){
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+        fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
+            {add(new StringBuilder(
+                    "public class Foo implements Bar" +
+                            "{" +
+                            "}"));}
+        });
+        List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
+        assertThat(classList.size(), is(1));
+        assertThat(classList.get(0).getName(), is("Foo"));
+        assertNull(classList.get(0).getParentName());
+        assertThat(classList.get(0).getInterfaceName(), is("Bar"));
     }
 
     @Test
