@@ -56,8 +56,8 @@ public class ValidateClassesTest {
     public void when_classes_has_no_base_class_then_throw_exception() throws MojoExecutionException {
         when(pageObjectReader.getClasses()).thenReturn(new ArrayList<PageObjectClass>(){
             {
-                add(new PageObjectClass("LoginPageObject", "","LoginPageObjectInterface"));
-                add(new PageObjectClass("MainPageObject", "", "MainPageObjectInterface"));
+                add(new PageObjectClass("LoginPageObject", null,"LoginPageObjectInterface"));
+                add(new PageObjectClass("MainPageObject", null, "MainPageObjectInterface"));
             }
         });
         PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
@@ -70,8 +70,8 @@ public class ValidateClassesTest {
     public void when_classes_has_no_interface_then_throw_exception() throws MojoExecutionException {
         when(pageObjectReader.getClasses()).thenReturn(new ArrayList<PageObjectClass>(){
             {
-                add(new PageObjectClass("LoginPageObject", "PageObject",""));
-                add(new PageObjectClass("MainPageObject", "PageObject", ""));
+                add(new PageObjectClass("LoginPageObject", "PageObject",null));
+                add(new PageObjectClass("MainPageObject", "PageObject", null));
             }
         });
         PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
@@ -79,7 +79,6 @@ public class ValidateClassesTest {
         exceptionRule.expectMessage("Page object classes should implement an interface.");
         pageObjectValidatorImp.validateClasses("[A-Z][a-z]+PageObject$", "PageObject");
     }
-
 
     @Test
     public void when_classes_has_same_base_class_and_same_interface_regex_then_no_exception() throws MojoExecutionException {

@@ -4,6 +4,7 @@ import com.pageobjectvalidator.maven.interfaces.PageObjectReader;
 import com.pageobjectvalidator.maven.interfaces.PageObjectValidator;
 import com.pageobjectvalidator.maven.model.PageObjectClass;
 import com.pageobjectvalidator.maven.model.PageObjectInterface;
+import com.pageobjectvalidator.maven.utils.StringUtil;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.util.List;
@@ -54,7 +55,7 @@ public class PageObjectValidatorImp implements PageObjectValidator {
     @Override
     public void validateClasses(String regex, String baseClassName) throws MojoExecutionException {
         List<PageObjectClass> classList = pageObjectReader.getClasses();
-        if (baseClassName.isEmpty()){
+        if (StringUtil.isNullOrEmpty(baseClassName)){
             throw new MojoExecutionException("Page object classes should be extended by base class.");
         }
         if (classList.size() == 0){
@@ -64,10 +65,10 @@ public class PageObjectValidatorImp implements PageObjectValidator {
             String className = pageObjectClass.getName();
             String parentName = pageObjectClass.getParentName();
             String interfaceName = pageObjectClass.getInterfaceName();
-            if (interfaceName.isEmpty()){
+            if (StringUtil.isNullOrEmpty(interfaceName)){
                 throw new MojoExecutionException("Page object classes should implement an interface.");
             }
-            if (parentName.isEmpty()){
+            if (StringUtil.isNullOrEmpty(parentName)){
                 throw new MojoExecutionException("Page object classes should be extended by base class.");
             }
             if (!className.matches(regex)){
