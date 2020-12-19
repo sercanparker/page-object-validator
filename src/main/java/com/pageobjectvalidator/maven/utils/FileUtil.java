@@ -3,6 +3,8 @@ package com.pageobjectvalidator.maven.utils;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -66,6 +68,15 @@ public class FileUtil {
         catch (Exception e){
             throw e;
         }
+    }
+
+    /**
+     * Checks given folder path exist or not.
+     * @param folderPath
+     * @return
+     */
+    public static boolean isExisting(String folderPath){
+        return new File(folderPath).exists();
     }
 
 }

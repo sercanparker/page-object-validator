@@ -27,8 +27,8 @@ import org.apache.maven.plugins.annotations.Parameter;
  * Checks naming conventions for Interfaces and Classes
  * while implementing page object design pattern.
  */
-@Mojo(name = "PageObjectChecker")
-public class PageObjectChecker extends AbstractMojo
+@Mojo(name = "PageObjectValidator")
+public class PageObjectValidatorMojo extends AbstractMojo
 {
 
     /**

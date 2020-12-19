@@ -5,6 +5,8 @@ import com.pageobjectvalidator.maven.model.PageObject;
 import com.pageobjectvalidator.maven.model.PageObjectClass;
 import com.pageobjectvalidator.maven.model.PageObjectInterface;
 import com.pageobjectvalidator.maven.utils.FileUtil;
+import com.pageobjectvalidator.maven.utils.StringUtil;
+import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +27,19 @@ public class PageObjectReaderImp implements PageObjectReader {
      */
     private String interfaceAbsolutePath;
 
-    public PageObjectReaderImp(String classesAbsolutePath, String interfaceAbsolutePath) {
+    public PageObjectReaderImp(String classesAbsolutePath, String interfaceAbsolutePath) throws MojoExecutionException {
+        if (StringUtil.isNullOrEmpty(classesAbsolutePath)){
+            throw new MojoExecutionException("Class path is empty. Please check your configuration tag.");
+        }
+        if (StringUtil.isNullOrEmpty(interfaceAbsolutePath)){
+            throw new MojoExecutionException("Interface path is empty. Please check your configuration");
+        }
+        if (!FileUtil.isExisting(classesAbsolutePath)){
+            throw new MojoExecutionException("Class path does not exist. Please check you configuration tag.");
+        }
+        if (!FileUtil.isExisting(interfaceAbsolutePath)){
+            throw new MojoExecutionException("Interface path does not exist. Please check you configuration tag.");
+        }
         this.classesAbsolutePath = classesAbsolutePath;
         this.interfaceAbsolutePath = interfaceAbsolutePath;
     }

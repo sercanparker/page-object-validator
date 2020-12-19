@@ -1,6 +1,7 @@
 import com.pageobjectvalidator.maven.impl.PageObjectReaderImp;
 import com.pageobjectvalidator.maven.model.PageObjectClass;
 import com.pageobjectvalidator.maven.utils.FileUtil;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,45 +35,49 @@ public class GetClassesTest {
     }
 
     @Test
-    public void when_there_is_nothing_then_return_empty_list(){
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath,testInterfaceAbsolutePath);
+    public void when_there_is_nothing_then_return_empty_list() throws MojoExecutionException {
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>());
+        fileUtilMock.when(() -> FileUtil.isExisting(testClassesAbsolutePath)).thenReturn(true);
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath,testInterfaceAbsolutePath);
         List<PageObjectClass> classesList =  pageObjectReaderImp.getClasses();
         assertThat(classesList.size(), is(0));
     }
 
     @Test
-    public void when_there_is_no_any_class_java_then_return_empty_list(){
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+    public void when_there_is_no_any_class_java_then_return_empty_list() throws MojoExecutionException {
+        fileUtilMock.when(() -> FileUtil.isExisting(testClassesAbsolutePath)).thenReturn(true);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder("text"));}
         });
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
         assertThat(classList.size(), is(0));
     }
 
     @Test
-    public void given_interface_content_has_anomaly_then_return_empty_list(){
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+    public void given_interface_content_has_anomaly_then_return_empty_list() throws MojoExecutionException {
+        fileUtilMock.when(() -> FileUtil.isExisting(testClassesAbsolutePath)).thenReturn(true);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo " +
                             "[" +
                             "}"));}
         });
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
         assertThat(classList.size(), is(0));
     }
 
     @Test
-    public void when_there_is_class_without_parent_and_interface_then_return_only_one_with_only_name(){
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+    public void when_there_is_class_without_parent_and_interface_then_return_only_one_with_only_name() throws MojoExecutionException {
+        fileUtilMock.when(() -> FileUtil.isExisting(testClassesAbsolutePath)).thenReturn(true);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo " +
-                    "{" +
-                    "}"));}
+                            "{" +
+                            "}"));}
         });
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
         assertThat(classList.size(), is(1));
         assertThat(classList.get(0).getName(), is("Foo"));
@@ -81,14 +86,15 @@ public class GetClassesTest {
     }
 
     @Test
-    public void when_there_is_class_without_parent_then_return_only_one_with_interface(){
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+    public void when_there_is_class_without_parent_then_return_only_one_with_interface() throws MojoExecutionException {
+        fileUtilMock.when(() -> FileUtil.isExisting(testClassesAbsolutePath)).thenReturn(true);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo implements Bar" +
                             "{" +
                             "}"));}
         });
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
         assertThat(classList.size(), is(1));
         assertThat(classList.get(0).getName(), is("Foo"));
@@ -97,14 +103,15 @@ public class GetClassesTest {
     }
 
     @Test
-    public void when_there_is_class_with_parent_and_without_interface_then_return_only_one_with_name_and_parent(){
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+    public void when_there_is_class_with_parent_and_without_interface_then_return_only_one_with_name_and_parent() throws MojoExecutionException {
+        fileUtilMock.when(() -> FileUtil.isExisting(testClassesAbsolutePath)).thenReturn(true);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo extends Bar" +
                             "{" +
                             "}"));}
         });
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
         assertThat(classList.size(), is(1));
         assertThat(classList.get(0).getName(), is("Foo"));
@@ -113,15 +120,15 @@ public class GetClassesTest {
     }
 
     @Test
-    public void when_there_is_class_with_parent_and_interface_then_return_only_one_with_name_and_parent_and_interface(){
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
+    public void when_there_is_class_with_parent_and_interface_then_return_only_one_with_name_and_parent_and_interface() throws MojoExecutionException {
+        fileUtilMock.when(() -> FileUtil.isExisting(testClassesAbsolutePath)).thenReturn(true);
         fileUtilMock.when(() -> FileUtil.getJavaContents(testClassesAbsolutePath)).thenReturn(new ArrayList<StringBuilder>(){
             {add(new StringBuilder(
                     "public class Foo extends Bar implements Zoo" +
                             "{" +
                             "}"));}
         });
-
+        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(testClassesAbsolutePath, testInterfaceAbsolutePath);
         List<PageObjectClass> classList = pageObjectReaderImp.getClasses();
         assertThat(classList.size(), is(1));
         assertThat(classList.get(0).getName(), is("Foo"));
