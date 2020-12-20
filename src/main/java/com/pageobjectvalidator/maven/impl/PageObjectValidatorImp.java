@@ -55,9 +55,6 @@ public class PageObjectValidatorImp implements PageObjectValidator {
     @Override
     public void validateClasses(String regex, String baseClassName) throws MojoExecutionException {
         List<PageObjectClass> classList = pageObjectReader.getClasses();
-        if (StringUtil.isNullOrEmpty(baseClassName)){
-            throw new MojoExecutionException("Page object classes should be extended by base class.");
-        }
         if (classList.size() == 0){
             throw new MojoExecutionException("There is no any class in absolute class path.");
         }

@@ -65,7 +65,7 @@ public class PageObjectValidatorMojo extends AbstractMojo
      * Name of base class that is parent of pages
      * Example : BasePageObject
      */
-    @Parameter(required = true)
+    @Parameter
     private String baseClassName;
 
 
