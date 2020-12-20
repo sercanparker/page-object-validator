@@ -47,6 +47,9 @@ public class ValidateInterfacesTest {
         });
         PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
         exceptionRule.expect(MojoExecutionException.class);
+        exceptionRule.expectMessage(String.format("Interface do not match with your regex. " +
+                "\n Given regex is %s. " +
+                "\n Interface name is %s", "[A-Z][a-z]+PageObjectInterface$", "FooObjectInterface"));
         pageObjectValidatorImp.validateInterfaces("[A-Z][a-z]+PageObjectInterface$");
     }
 

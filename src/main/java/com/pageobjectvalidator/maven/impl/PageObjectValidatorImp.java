@@ -72,7 +72,8 @@ public class PageObjectValidatorImp implements PageObjectValidator {
                 throw new MojoExecutionException("Page object classes should be extended by base class.");
             }
             if (!className.matches(regex)){
-                throw new MojoExecutionException("There are classes with different regex.");
+                throw new MojoExecutionException(String.format("There are classes with different regex. " +
+                        "Given regex is %s but found class name is %s", regex, className));
             }
         }
     }

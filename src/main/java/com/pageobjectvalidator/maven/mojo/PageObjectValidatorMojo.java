@@ -23,6 +23,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
+import java.util.List;
+
 /**
  * Checks naming conventions for Interfaces and Classes
  * while implementing page object design pattern.
@@ -36,7 +38,7 @@ public class PageObjectValidatorMojo extends AbstractMojo
      * Example : src/java/page/impl
      */
     @Parameter(required = true)
-    private String classesFolderPath;
+    private List<String> classesFolderPaths;
 
     /**
      * Regex for class names
@@ -50,7 +52,7 @@ public class PageObjectValidatorMojo extends AbstractMojo
      * Example : src/java/page/interfaces
      */
     @Parameter(required = true)
-    private String interfacesFolderPath;
+    private List<String> interfacesFolderPaths;
 
     /**
      * Regex for interface names
@@ -69,10 +71,17 @@ public class PageObjectValidatorMojo extends AbstractMojo
 
     public void execute() throws MojoExecutionException {
 
-        PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(classesFolderPath, interfacesFolderPath);
-        PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReaderImp);
-        pageObjectValidatorImp.validateClasses(classRegex, baseClassName);
-        pageObjectValidatorImp.validateInterfaces(interfaceRegex);
-
+        if (classesFolderPaths.size() != interfacesFolderPaths.size()){
+            throw new MojoExecutionException(String.format("Size of class path list and interface path list should be equal.\n" +
+                    "Size of class path list is %d.\n" +
+                    "Size of interface path list is %d.", classesFolderPaths.size(), interfacesFolderPaths.size()));
+        }
+        for (int i = 0; i < classesFolderPaths.size(); i++) {
+            PageObjectReaderImp pageObjectReaderImp = new PageObjectReaderImp(classesFolderPaths.get(i),
+                    interfacesFolderPaths.get(i));
+            PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReaderImp);
+            pageObjectValidatorImp.validateClasses(classRegex, baseClassName);
+            pageObjectValidatorImp.validateInterfaces(interfaceRegex);
+        }
     }
 }

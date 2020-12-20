@@ -48,7 +48,9 @@ public class ValidateClassesTest {
         });
         PageObjectValidatorImp pageObjectValidatorImp = new PageObjectValidatorImp(pageObjectReader);
         exceptionRule.expect(MojoExecutionException.class);
-        exceptionRule.expectMessage("There are classes with different regex.");
+        exceptionRule.expectMessage(String.format("There are classes with different regex. " +
+                "Given regex is %s but found class name is %s",
+                "[A-Z][a-z]+PageObject$", "LoginPage"));
         pageObjectValidatorImp.validateClasses("[A-Z][a-z]+PageObject$", "PageObject");
     }
 
