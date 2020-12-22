@@ -2,7 +2,7 @@
 ![Java CI with Maven](https://github.com/sercanparker/page-object-validator/workflows/Java%20CI%20with%20Maven/badge.svg?branch=main)
 [![Build Status](https://travis-ci.com/sercanparker/page-object-validator.svg?branch=main)](https://travis-ci.com/sercanparker/page-object-validator)
 [![codecov](https://codecov.io/gh/sercanparker/page-object-validator/branch/main/graph/badge.svg?token=S5H8200IX9)](https://codecov.io/gh/sercanparker/page-object-validator) <br />
-[Page Object Desing Pattern](https://martinfowler.com/bliki/PageObject.html) is applied while developing automated test scenarios against applications that has User Interface elements such as Web Page, Mobile Page etc. While implementing the design pattern to your automation project, naming convention for classes and interfaces  and consistency of the pattern are critical point especially for software that has more than one modules. These critical points could be smoothly handled and applied with this [maven plugin](https://maven.apache.org/plugins/) **(page-object-validator)**. And, code quality and consistency are protected with it. 
+[Page Object Desing Pattern](https://martinfowler.com/bliki/PageObject.html) is applied while developing automated test scenarios for applications that has User Interface elements such as Web Page, Mobile Page. <br /> While implementing the design pattern to your automation project, naming convention for classes and interfaces  and consistency of the pattern are critical point especially for software that has more than one modules. These critical points could be smoothly handled and applied with this [maven plugin](https://maven.apache.org/plugins/) **(page-object-validator)**. And, code quality and consistency are protected with it. 
 
 ## Getting Started
 Let's assume, directory layout of maven project that tried to be implement page object design pattern is set up like below. <br/>
@@ -101,3 +101,5 @@ You can also use this plugin for classes and interfaces that are located under d
     </build>
 ```
 After adding the plugin to your test automation project, you can execute your test, lets say with **mvn clean test**. If there is no any ERROR exception, you can be sure that your classes and interfaces are developed correctly with naming conventions which are defined in configuration tag as.
+## Issues
+If plugin throw an exception, please firsly check [issue list](https://github.com/sercanparker/page-object-validator/labels/question). 
