@@ -102,4 +102,4 @@ You can also use this plugin for classes and interfaces that are located under d
 ```
 After adding the plugin to your test automation project, you can execute your test, lets say with **mvn clean test**. If there is no any ERROR exception, you can be sure that your classes and interfaces are developed correctly with naming conventions which are defined in configuration tag as.
 ## Issues
-If plugin throw an exception, please firsly check [issue list](https://github.com/sercanparker/page-object-validator/labels/question). 
+If plugin throw an exception, please check [issue list](https://github.com/sercanparker/page-object-validator/labels/question). 
